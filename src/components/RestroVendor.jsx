@@ -27,15 +27,20 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  useToast,
+  position,
 } from '@chakra-ui/react';
+import { CheckIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 
 const RestroVendor = () => {
   const [searchQuery, setSearchQuery] = useState(''); 
   const [selectedRestro, setSelectedRestro] = useState(null); 
   const [selectedVendor, setSelectedVendor] = useState(null); 
+
   const { isOpen: isRestroOpen, onOpen: onRestroOpen, onClose: onRestroClose } = useDisclosure();
   const { isOpen: isVendorOpen, onOpen: onVendorOpen, onClose: onVendorClose } = useDisclosure(); 
 
+  const toast = useToast();
 
   const restaurants = [
     {
@@ -150,7 +155,6 @@ const RestroVendor = () => {
     },
   ];
 
- 
   const vendors = [
     {
       id: 1,
@@ -264,14 +268,12 @@ const RestroVendor = () => {
     },
   ];
 
-
   const filteredRestros = restaurants.filter((restro) => {
     return (
       restro.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       restro.cuisine.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
-
 
   const filteredVendors = vendors.filter((vendor) => {
     return (
@@ -280,16 +282,60 @@ const RestroVendor = () => {
     );
   });
 
-
   const handleRestroClick = (restro) => {
     setSelectedRestro(restro);
     onRestroOpen();
   };
 
-
   const handleVendorClick = (vendor) => {
     setSelectedVendor(vendor);
     onVendorOpen();
+  };
+
+
+  const handleRestroStatus = (status) => {
+    let statusMessage = '';
+    let toastStatus = '';
+    if (status === 'approved') {
+      statusMessage = 'Restaurant is approved!';
+      toastStatus = 'success';
+    } else if (status === 'rejected') {
+      statusMessage = 'Restaurant is rejected!';
+      toastStatus = 'error';
+    } else if (status === 'pending') {
+      statusMessage = 'Restaurant is on hold!';
+      toastStatus = 'warning';
+    }
+    toast({
+      title: statusMessage,
+      status: toastStatus,
+      duration: 3000,
+      isClosable: true,
+      position: 'top-right'
+    });
+  };
+
+  
+  const handleVendorStatus = (status) => {
+    let statusMessage = '';
+    let toastStatus = '';
+    if (status === 'approved') {
+      statusMessage = 'Vendor is approved!';
+      toastStatus = 'success';
+    } else if (status === 'rejected') {
+      statusMessage = 'Vendor is rejected!';
+      toastStatus = 'error';
+    } else if (status === 'pending') {
+      statusMessage = 'Vendor is on hold!';
+      toastStatus = 'warning';
+    }
+    toast({
+      title: statusMessage,
+      status: toastStatus,
+      duration: 3000,
+      isClosable: true,
+      position: 'top-right'
+    });
   };
 
   return (
@@ -449,9 +495,32 @@ const RestroVendor = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" onClick={onRestroClose}>
-              Close
-            </Button>
+            <HStack spacing={3}>
+              <Button
+                leftIcon={<CheckIcon />}
+                colorScheme="green"
+                onClick={() => handleRestroStatus('approved')}
+              >
+                Approved
+              </Button>
+              <Button
+                leftIcon={<CloseIcon />}
+                colorScheme="red"
+                onClick={() => handleRestroStatus('rejected')}
+              >
+                Reject
+              </Button>
+              <Button
+                leftIcon={<WarningIcon />}
+                colorScheme="yellow"
+                onClick={() => handleRestroStatus('pending')}
+              >
+                Pending
+              </Button>
+              <Button colorScheme="teal" onClick={onRestroClose}>
+                Close
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -511,9 +580,33 @@ const RestroVendor = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" onClick={onVendorClose}>
-              Close
-            </Button>
+            
+            <HStack spacing={3}>
+              <Button
+                leftIcon={<CheckIcon />}
+                colorScheme="green"
+                onClick={() => handleVendorStatus('approved')}
+              >
+                Approved
+              </Button>
+              <Button
+                leftIcon={<CloseIcon />}
+                colorScheme="red"
+                onClick={() => handleVendorStatus('rejected')}
+              >
+                Reject
+              </Button>
+              <Button
+                leftIcon={<WarningIcon />}
+                colorScheme="yellow"
+                onClick={() => handleVendorStatus('pending')}
+              >
+                Pending
+              </Button>
+              <Button colorScheme="teal" onClick={onVendorClose}>
+                Close
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -8,7 +8,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const WeekWiseReport = () => {
   const [selectedMonth, setSelectedMonth] = useState('October');
 
- 
   const weeklyData = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
@@ -18,6 +17,15 @@ const WeekWiseReport = () => {
         backgroundColor: 'rgba(153, 102, 255, 0.6)',
       },
     ],
+  };
+
+  
+  const filteredData = {
+    ...weeklyData,
+    datasets: weeklyData.datasets.map((dataset) => ({
+      ...dataset,
+      data: dataset.data.map((value) => (selectedMonth === 'October' ? value : value * 0.3)), 
+    })),
   };
 
   return (
@@ -31,15 +39,15 @@ const WeekWiseReport = () => {
           <option value="August">August</option>
         </Select>
       </HStack>
-      <Bar data={weeklyData} />
+      <Bar data={filteredData} />
       <HStack mt={4} spacing={4}>
         <Card>
           <CardHeader>Total Orders</CardHeader>
-          <CardBody>400</CardBody>
+          <CardBody>{filteredData.datasets[0].data.reduce((a, b) => a + b, 0)}</CardBody>
         </Card>
         <Card>
           <CardHeader>Total Revenue</CardHeader>
-          <CardBody>₹1,23,456</CardBody>
+          <CardBody>₹{filteredData.datasets[0].data.reduce((a, b) => a + b, 0) * 100}</CardBody>
         </Card>
       </HStack>
     </Box>

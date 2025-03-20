@@ -8,7 +8,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const MonthWiseReport = () => {
   const [selectedYear, setSelectedYear] = useState('2023');
 
-  // Dummy data for monthly orders
+  
   const monthlyData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
@@ -19,6 +19,15 @@ const MonthWiseReport = () => {
         fill: false,
       },
     ],
+  };
+
+ 
+  const filteredData = {
+    ...monthlyData,
+    datasets: monthlyData.datasets.map((dataset) => ({
+      ...dataset,
+      data: dataset.data.map((value) => (selectedYear === '2023' ? value : value * 0.8)), 
+    })),
   };
 
   return (
@@ -32,15 +41,15 @@ const MonthWiseReport = () => {
           <option value="2021">2021</option>
         </Select>
       </HStack>
-      <Line data={monthlyData} />
+      <Line data={filteredData} />
       <HStack mt={4} spacing={4}>
         <Card>
           <CardHeader>Total Orders</CardHeader>
-          <CardBody>4,320</CardBody>
+          <CardBody>{filteredData.datasets[0].data.reduce((a, b) => a + b, 0)}</CardBody>
         </Card>
         <Card>
           <CardHeader>Total Revenue</CardHeader>
-          <CardBody>₹12,34,567</CardBody>
+          <CardBody>₹{filteredData.datasets[0].data.reduce((a, b) => a + b, 0) * 100}</CardBody>
         </Card>
       </HStack>
     </Box>

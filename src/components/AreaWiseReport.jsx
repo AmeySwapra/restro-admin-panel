@@ -8,7 +8,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const AreaWiseReport = () => {
   const [selectedCity, setSelectedCity] = useState('Delhi');
 
-  // Dummy data for cities and areas
+ 
   const cityData = {
     Delhi: [120, 90, 80, 70, 60],
     Mumbai: [100, 85, 75, 65, 55],
@@ -17,7 +17,8 @@ const AreaWiseReport = () => {
     Kolkata: [80, 70, 60, 50, 40],
   };
 
-  const areaData = {
+  
+  const filteredData = {
     labels: ['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5'],
     datasets: [
       {
@@ -41,15 +42,15 @@ const AreaWiseReport = () => {
           <option value="Kolkata">Kolkata</option>
         </Select>
       </HStack>
-      <Bar data={areaData} />
+      <Bar data={filteredData} />
       <HStack mt={4} spacing={4}>
         <Card>
           <CardHeader>Total Orders</CardHeader>
-          <CardBody>{cityData[selectedCity].reduce((a, b) => a + b, 0)}</CardBody>
+          <CardBody>{filteredData.datasets[0].data.reduce((a, b) => a + b, 0)}</CardBody>
         </Card>
         <Card>
           <CardHeader>Top Area</CardHeader>
-          <CardBody>Area 1 - {cityData[selectedCity][0]} Orders</CardBody>
+          <CardBody>Area 1 - {filteredData.datasets[0].data[0]} Orders</CardBody>
         </Card>
       </HStack>
     </Box>
